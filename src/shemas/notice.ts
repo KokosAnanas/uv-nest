@@ -19,6 +19,7 @@ export class Notice implements INotice {
     @Prop() violations: INoticeViolation[];
     @Prop() actions: string;
     @Prop() contacts: string;
+    @Prop({ type: [String], default: [] }) photos: string[];
 }
 
 export const NoticeSchema = SchemaFactory.createForClass(Notice);

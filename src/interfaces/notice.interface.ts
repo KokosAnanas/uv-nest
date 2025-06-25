@@ -11,6 +11,7 @@ export interface INotice {
     violations: INoticeViolation[];
     actions:    string;
     contacts:   string;
+    photos: string[];
 }
 
 export interface INoticeViolation {

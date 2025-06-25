@@ -1,8 +1,23 @@
-import {Body, Controller, Delete, Get, Param, Post, UseGuards} from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    InternalServerErrorException,
+    Param,
+    Post,
+    UploadedFiles,
+    UseGuards,
+    UseInterceptors
+} from '@nestjs/common';
 import {NoticesService} from "../../services/notices/notices.service";
 import {JwtAuthGuard} from "../../services/authentication/jwt-auth.guard/jwt-auth.guard.service";
 import {ValidationParamIdPipe} from "../../pipes/param.pipe";
 import {INotice} from "../../interfaces/notice.interface";
+import {FilesInterceptor} from "@nestjs/platform-express";
+import {diskStorage} from "multer";
+import {NoticeDto} from "../../dto/notice-dto";
+
 
 @Controller('notices')
 export class NoticesController {
@@ -10,10 +25,35 @@ export class NoticesController {
     constructor(private noticesService: NoticesService) {
     }
 
+    // @Post()
+    // create(@Body() dto: INotice) {
+    //     return this.noticesService.uploadNotice(dto);
+    // }
+
     @Post()
-    create(@Body() dto: INotice) {
-        return this.noticesService.uploadNotice(dto);
+    @UseInterceptors(
+        FilesInterceptor('photos', 10, {
+            storage: diskStorage({
+                destination: './uploads',
+                filename: (_req, file, cb) =>
+                    cb(null, `${Date.now()}-${file.originalname}`),
+            }),
+        }),
+    )
+    async create(
+        @UploadedFiles() files: Express.Multer.File[],
+        @Body('notice') raw: string,
+    ) {
+        try {
+            const dto: NoticeDto = JSON.parse(raw);
+            dto.photos = (files ?? []).map(f => f.filename);      // ← защита
+            return await this.noticesService.uploadNotice(dto);
+        } catch (err) {
+            console.error(err);                                   // лог в консоль
+            throw new InternalServerErrorException('Failed to save notice');
+        }
     }
+
 
     @Post('seed')
     initNotices() {

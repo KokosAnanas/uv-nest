@@ -13,6 +13,7 @@ export class NoticeDto implements INotice {
     violations: INoticeViolation[] = [];
     actions:    string;
     contacts:   string;
+    photos: string[];
 
     constructor(init?: Partial<INotice>) {
         Object.assign(this, init);
