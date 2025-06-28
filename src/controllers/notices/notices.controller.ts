@@ -30,6 +30,7 @@ export class NoticesController {
     //     return this.noticesService.uploadNotice(dto);
     // }
 
+    // Фрагмент контроллера уведомлений (NoticesController)
     @Post()
     @UseInterceptors(
         FilesInterceptor('photos', 10, {

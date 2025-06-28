@@ -11,8 +11,8 @@ import {INotice} from "../../interfaces/notice.interface";
 export class NoticesService {
     private noticesCount = 10;
 
-    constructor(@InjectModel(Notice.name) private noticeModel: Model<NoticeDocument>) {
-    }
+    constructor(@InjectModel(Notice.name)
+                private noticeModel: Model<NoticeDocument>) {}
 
 // добавить в БД
     async generateNotices() {
