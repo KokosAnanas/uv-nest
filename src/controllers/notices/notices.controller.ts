@@ -66,6 +66,11 @@ export class NoticesController {
         this.noticesService.deleteNotices();
     }
 
+    @Delete(':noticeNum')
+    async removeNotice(@Param('noticeNum') noticeNum: string): Promise<void> {
+        await this.noticesService.deleteNoticeByNum(noticeNum);
+    }
+
     @UseGuards(JwtAuthGuard)
     @Get()
     getAllNotices() {

@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import {InjectModel} from "@nestjs/mongoose";
-import {Notice, NoticeDocument} from "../../shemas/notice";
-import {Model} from "mongoose";
-import {NoticeDto} from "../../dto/notice-dto";
-import {filter} from "rxjs";
-import {User} from "../../shemas/user";
-import {INotice} from "../../interfaces/notice.interface";
+import { InjectModel } from '@nestjs/mongoose';
+import { Notice, NoticeDocument } from '../../shemas/notice';
+import { Model } from 'mongoose';
+import { NoticeDto } from '../../dto/notice-dto';
+import { filter } from 'rxjs';
+import { User } from '../../shemas/user';
+import { INotice } from '../../interfaces/notice.interface';
+import { promises as fs } from 'fs';
+import { join } from 'path';
 
 @Injectable()
 export class NoticesService {
@@ -30,6 +32,21 @@ export class NoticesService {
 
     async getAllNotices(): Promise<Notice[]> {
         return this.noticeModel.find()
+    }
+
+    async deleteNoticeByNum(noticeNum: string): Promise<void> {
+        const deleted = await this.noticeModel.findOneAndDelete({ noticeNum });
+        if (deleted?.photos?.length) {
+            for (const file of deleted.photos) {
+                const pathToFile = join('uploads', file);
+                try {
+                    await fs.unlink(pathToFile);
+                } catch (err) {
+                    // ignore missing files
+                    console.error(err);
+                }
+            }
+        }
     }
 
     async getNoticeById(id): Promise<INotice | null> {
