@@ -57,6 +57,14 @@ export class NoticesService {
         const notice = new this.noticeModel(body);  // без лишнего DTO
         return notice.save();
     }
+
+    async updateNotice(noticeNum: string, dto: Partial<NoticeDto>) {
+        return this.noticeModel.findOneAndUpdate(
+            { noticeNum },
+            { $set: dto },
+            { new: true, upsert: false },
+        );
+    }
 }
 
 

@@ -5,7 +5,7 @@ import {
     Get,
     InternalServerErrorException,
     Param,
-    Post,
+    Post, Put,
     UploadedFiles,
     UseGuards,
     UseInterceptors
@@ -86,6 +86,27 @@ export class NoticesController {
     @Get(':id')
     getNoticeById(@Param('id', ValidationParamIdPipe) id: string): Promise<INotice | null> {
         return this.noticesService.getNoticeById(id)
+    }
+
+    @Put(':noticeNum')
+    @UseInterceptors(
+        FilesInterceptor('photos', 10, {
+            storage: diskStorage({
+                destination: './uploads',
+                filename: (_req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
+            }),
+        }),
+    )
+    async update(
+        @Param('noticeNum') noticeNum: string,
+        @UploadedFiles() files: Express.Multer.File[],
+        @Body('notice') raw: string,
+    ) {
+        const dto: NoticeDto = JSON.parse(raw);
+        const newNames = (files ?? []).map(f => f.filename);
+        dto.photos = Array.from(new Set([...dto.photos, ...newNames]));
+
+        return this.noticesService.updateNotice(noticeNum, dto);
     }
 
 
