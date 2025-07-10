@@ -8,37 +8,30 @@ import {
     Param,
     Post,
     Put,
-    Query,
     UseGuards
 } from '@nestjs/common';
 import {UsersService} from "../../services/users/users.service";
 import {User} from "../../shemas/user";
 import {UserDto} from "../../dto/user-dto";
-import RejectedValue = jest.RejectedValue;
 import {AuthGuard} from "@nestjs/passport";
-import {JwtAuthGuard} from "../../services/authentication/jwt-auth.guard/jwt-auth.guard.service";
 import {UserAuthPipe} from "../../pipes/user.pipe";
-import {IUser} from "../../interfaces/user.interface";
+import {JwtAuthGuard} from "../../services/authentication/jwt-auth.guard/jwt-auth.guard.service";
 
 @Controller('users')
 export class UsersController {
     constructor(private userService: UsersService) {}
-
 
     @Get()
     getAllUsers(): Promise<User[]> {
         return this.userService.getAllUsers();
     }
 
-
     @Get(":id")
     getUserById(@Param('id') id): Promise<User | null> {
         return this.userService.getUserById(id);
     }
 
-
-
-    // @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard)        // ус
     @Post()
     sendUser(@Body(UserAuthPipe) data: UserDto): Promise<boolean> {
 
@@ -73,10 +66,8 @@ export class UsersController {
         return this.userService.deleteUsers();
     }
 
-
     @Delete(":id")
     deleteUserById(@Param('id') id): Promise<User | null> {
         return this.userService.deleteUserById(id);
     }
-
 }

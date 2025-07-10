@@ -1,6 +1,5 @@
 
 export type Roles  = 'admin' | 'user'
-
 import * as mongoose from "mongoose";
 
 export interface IUser {

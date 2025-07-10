@@ -14,9 +14,7 @@ import {JwtStrategyService} from "../../services/authentication/jwt-strategy/jwt
         JwtModule.register({
             secret: jwtConstants.secret
         })],
-    controllers: [NoticesController,
-        // NoticeItemController
-    ],
+    controllers: [NoticesController],
     providers: [NoticesService, JwtStrategyService],
 })
 export class NoticesModule {}

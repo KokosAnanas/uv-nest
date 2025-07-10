@@ -2,7 +2,6 @@ import {BadRequestException, Delete, Get, Injectable, Param, Post, Put} from '@n
 import {InjectModel} from "@nestjs/mongoose";
 import {User, UserDocument} from "../../shemas/user";
 import {Model} from "mongoose";
-import {UserDto} from "../../dto/user-dto";
 import {JwtService} from "@nestjs/jwt";
 import * as bcrypt from 'bcrypt';
 import {IResponseUser, IUser} from "../../interfaces/user.interface";

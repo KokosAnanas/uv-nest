@@ -3,7 +3,7 @@ import {INotice, INoticeViolation} from "../interfaces/notice.interface";
 export class NoticeDto implements INotice {
     orgName:    string;
     noticeNum:  string;
-    noticeDate: Date;     // string | Date
+    noticeDate: Date;
     toWhom:     string;
     copyTo:     string;
     specialist: string;

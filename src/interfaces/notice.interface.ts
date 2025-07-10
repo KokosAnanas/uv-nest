@@ -22,17 +22,3 @@ export interface INoticeViolation {
     deadline: Date;
     note: string;
 }
-
-
-
-//
-//
-//
-//
-// export interface INoticeClient {
-//     name: string,
-//     description: string,
-//     noticeOperator: string,
-//     price: string,
-//     img: string,
-// }

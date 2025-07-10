@@ -3,8 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Notice, NoticeDocument } from '../../shemas/notice';
 import { Model } from 'mongoose';
 import { NoticeDto } from '../../dto/notice-dto';
-import { filter } from 'rxjs';
-import { User } from '../../shemas/user';
 import { INotice } from '../../interfaces/notice.interface';
 import { promises as fs } from 'fs';
 import { join } from 'path';
@@ -42,7 +40,6 @@ export class NoticesService {
                 try {
                     await fs.unlink(pathToFile);
                 } catch (err) {
-                    // ignore missing files
                     console.error(err);
                 }
             }

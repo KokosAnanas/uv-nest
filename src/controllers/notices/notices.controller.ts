@@ -18,19 +18,12 @@ import {FilesInterceptor} from "@nestjs/platform-express";
 import {diskStorage} from "multer";
 import {NoticeDto} from "../../dto/notice-dto";
 
-
 @Controller('notices')
 export class NoticesController {
 
     constructor(private noticesService: NoticesService) {
     }
 
-    // @Post()
-    // create(@Body() dto: INotice) {
-    //     return this.noticesService.uploadNotice(dto);
-    // }
-
-    // Фрагмент контроллера уведомлений (NoticesController)
     @Post()
     @UseInterceptors(
         FilesInterceptor('photos', 10, {
@@ -47,14 +40,13 @@ export class NoticesController {
     ) {
         try {
             const dto: NoticeDto = JSON.parse(raw);
-            dto.photos = (files ?? []).map(f => f.filename);      // ← защита
+            dto.photos = (files ?? []).map(f => f.filename);
             return await this.noticesService.uploadNotice(dto);
         } catch (err) {
-            console.error(err);                                   // лог в консоль
+            console.error(err);
             throw new InternalServerErrorException('Failed to save notice');
         }
     }
-
 
     @Post('seed')
     initNotices() {
@@ -76,12 +68,6 @@ export class NoticesController {
     getAllNotices() {
         return this.noticesService.getAllNotices();
     }
-
-    // @UseGuards(JwtAuthGuard)
-    // @Get(':id')
-    // getNoticeById(@Param('id') id: string): Promise<INotice> {
-    //     return this.NoticesService.getNoticeById(id)
-    // }
 
     @Get(':id')
     getNoticeById(@Param('id', ValidationParamIdPipe) id: string): Promise<INotice | null> {
@@ -108,7 +94,5 @@ export class NoticesController {
 
         return this.noticesService.updateNotice(noticeNum, dto);
     }
-
-
 }
 

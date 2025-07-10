@@ -13,11 +13,8 @@ async function bootstrap() {
     credentials: true,
   })
 
-
   app.useStaticAssets(join(__dirname, '..', 'public'), {prefix: '/public'});
   app.useStaticAssets(join(__dirname, '..', 'uploads'), { prefix: '/uploads' });
-
-
 
   app.useGlobalPipes(new ValidationPipe({whitelist: true}));
   await app.listen(process.env.PORT ?? 3000);
