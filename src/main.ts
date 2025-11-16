@@ -1,13 +1,21 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import {ValidationPipe} from "@nestjs/common";
+import {LogLevel, ValidationPipe} from "@nestjs/common";
 import {NestExpressApplication} from "@nestjs/platform-express";
 import {join} from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+    const levelsCsv = process.env.NEST_LOG_LEVELS ?? 'log,error,warn';
+    const levels = levelsCsv.split(',').map(s => s.trim()).filter(Boolean) as LogLevel[];
+    app.useLogger(levels);
+
+    const csv = process.env.CORS_ORIGIN ?? '';
+    const origins = csv.split(',').map(s => s.trim()).filter(Boolean);
+
   app.enableCors({
-    origin: 'http://localhost:4200',
+    origin: origins.length ? origins : true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE, OPTIONS',
     allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
     credentials: true,
